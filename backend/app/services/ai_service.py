@@ -61,13 +61,13 @@ async def extract_fields_from_document(document_url: str) -> Dict:
         - Date of birth
         - Address
         - Sex/Gender
-        - Any other relevant personal information
+        - All other relevant personal information
         
         Return the information in JSON format with keys: full_name, id_number, date_of_birth, address, sex, and any other fields you find.
         If a field is not present, use null."""
         
         completion = client.chat.completions.create(
-            model="qwen-vl-max",  # Using qwen-vl-max for better accuracy; can use qwen-vl-plus or qwen3-vl-flash
+            model="qwen-vl-ocr", 
             messages=[
                 {
                     "role": "user",
@@ -77,7 +77,7 @@ async def extract_fields_from_document(document_url: str) -> Dict:
                     ]
                 }
             ],
-            temperature=0.1,  # Low temperature for consistent extraction
+            temperature=0.15,  # Low temperature for consistent extraction
         )
         
         # Parse response
