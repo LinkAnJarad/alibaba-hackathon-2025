@@ -67,7 +67,7 @@ async def extract_fields_from_document(document_url: str) -> Dict:
         If a field is not present, use null."""
         
         completion = client.chat.completions.create(
-            model="qwen-vl-ocr", 
+            model="qwen3-vl-flash", 
             messages=[
                 {
                     "role": "user",
