@@ -5,6 +5,7 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import SubmitForm from "./pages/SubmitForm";
 import AdminReview from "./pages/AdminReview";
+import TestExtraction from "./pages/TestExtraction";
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/submit" element={<SubmitForm />} />
         <Route path="/admin/review" element={<AdminReview />} />
+        <Route path="/test/extract" element={<TestExtraction />} />
       </Routes>
     </Layout>
   );

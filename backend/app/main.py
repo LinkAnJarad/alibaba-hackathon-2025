@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .api.v1 import auth, uploads, ai, health
+from .api.v1 import auth, uploads, ai, health, test
 
 app = FastAPI(title="SmartBarangay Forms API", version="0.1.0")
 
@@ -19,6 +19,7 @@ app.include_router(health.router, prefix="/api/v1")
 app.include_router(auth.router, prefix="/api/v1/auth", tags=["auth"])
 app.include_router(uploads.router, prefix="/api/v1/uploads", tags=["uploads"])
 app.include_router(ai.router, prefix="/api/v1/ai", tags=["ai"])
+app.include_router(test.router, prefix="/api/v1", tags=["test"])
 
 
 @app.get("/")

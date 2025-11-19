@@ -10,6 +10,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <Link to="/dashboard">Dashboard</Link>
             <Link to="/submit">Submit Form</Link>
             <Link to="/admin/review">Admin Review</Link>
+            <Link to="/test/extract" className="text-purple-600">Test AI</Link>
             <Link to="/login" className="ml-auto">Login</Link>
           </nav>
         </div>
