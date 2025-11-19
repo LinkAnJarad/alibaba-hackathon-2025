@@ -6,6 +6,7 @@ import Dashboard from "./pages/Dashboard";
 import SubmitForm from "./pages/SubmitForm";
 import AdminReview from "./pages/AdminReview";
 import TestExtraction from "./pages/TestExtraction";
+import TestPdfAutoFill from "./pages/TestPdfAutoFill";
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
         <Route path="/submit" element={<SubmitForm />} />
         <Route path="/admin/review" element={<AdminReview />} />
         <Route path="/test/extract" element={<TestExtraction />} />
+        <Route path="/test/pdf-autofill" element={<TestPdfAutoFill />} />
       </Routes>
     </Layout>
   );

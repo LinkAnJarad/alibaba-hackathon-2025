@@ -1,0 +1,42 @@
+[
+  {
+    "type": "single",
+    "field": "complete_address",
+    "value": "123 Main St, Anytown, Philippines",
+    "form_mapping": {
+      "type": "multiple",
+      "fields": [
+        {
+          "field": "street",
+          "value": "123 Main St"
+        },
+        {
+          "field": "city",
+          "value": "Anytown"
+        },
+        {
+          "field": "country",
+          "value": "Philippines"
+        }
+      ]
+    }
+  },
+  {
+    "type": "multiple",
+    "fields": [
+      {
+        "field": "first_name",
+        "value": "John"
+      },
+      {
+        "field": "last_name",
+        "value": "Doe"
+      }
+    ],
+    "form_mapping": {
+      "type": "single",
+      "field": "full_name",
+      "value": "John Doe"
+    }
+  }
+]
