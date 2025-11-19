@@ -1,15 +1,35 @@
 import { useState } from "react";
 import { api } from "../lib/api";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
+interface User {
+  id: number;
+  email: string;
+  name: string;
+  verified: boolean;
+  role: string;
+}
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [token, setToken] = useState<string | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const submit = async () => {
-    const res = await api.post("/auth/login", { email, password });
-    setToken(res.data.access_token);
+    try {
+      setError(null);
+      const res = await api.post("/auth/login", { email, password });
+      const userData = res.data as User;
+      setUser(userData);
+      // Store user ID in localStorage for prototyping
+      localStorage.setItem("userId", userData.id.toString());
+      // Redirect to dashboard
+      navigate("/dashboard");
+    } catch (err: any) {
+      setError(err.response?.data?.detail || "Login failed");
+    }
   };
 
   return (
@@ -32,8 +52,11 @@ export default function Login() {
         <button onClick={submit} className="px-3 py-2 bg-blue-600 text-white rounded">
           Sign In
         </button>
-        {token && (
-          <div className="text-xs text-green-700">Signed in. Token: {token}</div>
+        {error && <div className="text-sm text-red-600">{error}</div>}
+        {user && (
+          <div className="text-sm text-green-700">
+            Welcome {user.name}! (ID: {user.id})
+          </div>
         )}
         <div className="text-sm">
           No account? <Link to="/register" className="text-blue-700">Register</Link>

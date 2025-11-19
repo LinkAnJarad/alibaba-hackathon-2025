@@ -1,10 +1,8 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from pydantic import BaseModel, EmailStr
 
-from ...dependencies.auth import get_current_user, get_current_admin_user
 from ...dependencies.database import get_db
-from ...core.security import create_access_token
 from ...services.auth_service import register_user, authenticate_user, verify_user
 from ...schemas.user import UserOut
 from ...models.user import User
@@ -21,11 +19,6 @@ class RegisterRequest(BaseModel):
     email: EmailStr
     password: str
     name: str
-
-
-class TokenResponse(BaseModel):
-    access_token: str
-    token_type: str = "bearer"
 
 
 class MessageResponse(BaseModel):
@@ -47,43 +40,47 @@ async def register(payload: RegisterRequest, db: AsyncSession = Depends(get_db))
             db=db, email=payload.email, password=payload.password, name=payload.name
         )
         return MessageResponse(
-            message=f"Registration successful. Please visit the barangay hall for verification. User ID: {user.id}"
+            message=f"Registration successful. User ID: {user.id}. Please visit the barangay hall for verification."
         )
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
 
-@router.post("/login", response_model=TokenResponse)
+@router.post("/login", response_model=UserOut)
 async def login(payload: LoginRequest, db: AsyncSession = Depends(get_db)):
     """
-    Authenticate user and return JWT access token.
+    Authenticate user and return user object.
+    For prototyping only (no JWT tokens).
     """
     user = await authenticate_user(db=db, email=payload.email, password=payload.password)
     if not user:
         raise HTTPException(status_code=401, detail="Invalid email or password")
     
-    # Create JWT token with user ID as subject
-    access_token = create_access_token(data={"sub": str(user.id)})
-    return TokenResponse(access_token=access_token)
+    return user
 
 
 @router.get("/me", response_model=UserOut)
-async def me(current_user: User = Depends(get_current_user)):
+async def me(user_id: int = Query(..., description="User ID"), db: AsyncSession = Depends(get_db)):
     """
-    Get current authenticated user information.
+    Get user information by ID.
+    For prototyping: pass user_id as query parameter.
     """
-    return current_user
+    from ...services.auth_service import get_user_by_id
+    
+    user = await get_user_by_id(db, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
 
 
 @router.post("/verify", response_model=UserOut)
 async def verify_user_endpoint(
     payload: VerifyUserRequest,
     db: AsyncSession = Depends(get_db),
-    admin_user: User = Depends(get_current_admin_user),
 ):
     """
     Admin endpoint: Verify a user after in-person identity check.
-    Requires admin role.
+    For prototyping: simplified (no role check).
     """
     try:
         user = await verify_user(db=db, user_id=payload.user_id)
